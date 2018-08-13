@@ -66,6 +66,6 @@ function fn_soneritics_criteo_before_dispatch($controller, $mode, $action, $disp
     // Set view variable for the addon
     if (!empty($template)) {
         Tygh::$app['view']->assign('soneriticsCriteoPage', $template);
-        Tygh::$app['view']->assign('soneriticsCriteoEmail', \Tygh\Registry::get('addons.soneritics_criteo.email'));
+        Tygh::$app['view']->assign('soneriticsCriteoEmail', md5(\Tygh\Registry::get('addons.soneritics_criteo.email')));
     }
 }
