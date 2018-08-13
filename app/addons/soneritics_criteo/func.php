@@ -23,3 +23,49 @@
  * THE SOFTWARE.
  */
 if (!defined('BOOTSTRAP')) { die('Access denied'); }
+
+/**
+ * Check if the Criteo tags need to be inserted
+ * @param $controller
+ * @param $mode
+ * @param $action
+ * @param $dispatch_extra
+ * @param $area
+ */
+function fn_soneritics_criteo_before_dispatch($controller, $mode, $action, $dispatch_extra, $area)
+{
+    // Only for the customer area
+    if (AREA != 'C') {
+        return;
+    }
+
+    // Check if the current page contains data we should process
+    switch ("{$controller}.{$mode}") {
+        case 'index.index':
+            $template = 'homepage';
+            break;
+
+        case 'categories.view':
+        case 'products.search':
+            $template = 'listing';
+            break;
+
+        case 'products.view':
+            $template = 'product';
+            break;
+
+        case 'checkout.cart':
+            $template = 'cart';
+            break;
+
+        case 'checkout.complete':
+            $template = 'sales';
+            break;
+    }
+
+    // Set view variable for the addon
+    if (!empty($template)) {
+        Tygh::$app['view']->assign('soneriticsCriteoPage', $template);
+        Tygh::$app['view']->assign('soneriticsCriteoEmail', \Tygh\Registry::get('addons.soneritics_criteo.email'));
+    }
+}
